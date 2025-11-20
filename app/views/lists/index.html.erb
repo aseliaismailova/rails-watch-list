@@ -1,0 +1,18 @@
+<div class="mb-4 d-flex justify-content-center align-items-center">
+
+
+<h1>My watch list</h1>
+</div>
+
+<div class="mb-4 d-flex justify-content-center align-items-center">
+<p>Your favourite movies in one place!</p>
+</div>
+
+<%= link_to "Create a new list", new_list_path %>
+
+<ul class="list-group">
+  <% @lists.each do |list| %>
+    <li class="list-group-item"><%= list.name %></li>
+  <% end %>
+</ul>
+<br>
