@@ -1,7 +1,111 @@
-<div class="mb-4 d-flex justify-content-center align-items-center">
-<p><strong>Lists</strong></p>
-<h2><%= @list.name %></h2>
-<p><%= @list.bookmark</p>%>
-<p><%= @list.movie %></p>
-<p><%= @list.review %></p>
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand d-flex align-items-center" href="/">
+    <img src="<%= asset_path('popcorn.png') %>" width="40" height="40" class="d-inline-block align-top me-2" alt="Logo">
+  </a>
+
+  <div class="d-flex gap-2">
+    <%= link_to "Create a Movie List", new_list_path, class: "btn btn-primary rounded-btn" %>
+  </div>
+</nav>
+
+
+<div class="banner"
+  style="background-image:
+    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+    url('https://dslv9ilpbe7p1.cloudfront.net/xF71XJm6LoG5LV4jPtYRwQ_store_banner_image.jpeg');
+  ">
+</div>
+
+
+<div class="container mt-4">
+
+  <!-- List Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="m-0"><%= @list.name %></h1>
+
+    <div class="d-flex gap-2">
+
+      <%= link_to "Home", lists_path, class: "btn btn-primary rounded-btn" %>
+
+      <!-- Add Movie (modal trigger) -->
+      <button type="button"
+              class="btn btn-primary rounded-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop">
+        Add a Movie
+      </button>
+
+      <!-- Delete List -->
+      <%= link_to "Delete List",
+                  list_path(@list),
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                  class: "btn btn-danger rounded-btn" %>
+    </div>
+  </div>
+
+
+  <!-- Add Movie Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-2">
+        <div class="modal-header">
+          <h5 class="modal-title">Add a Movie to <%= @list.name %></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <%= simple_form_for [@list, @bookmark] do |f| %>
+            <%= f.input :comment, placeholder: "Enter a comment about the movie" %>
+            <%= f.association :movie,
+                              prompt: "Select a movie",
+                              input_html: { data: { controller: "tom-select" } } %>
+
+            <%= f.submit "Add Movie", class: "btn btn-primary mt-2" %>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="container py-5">
+  <h3 class="mb-4">Movies in this List</h3>
+
+  <div class="row g-4">
+    <% @list.bookmarks.each do |bm| %>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card shadow-sm h-100">
+
+          <!-- Movie Poster -->
+          <% if bm.movie.poster_url.present? %>
+            <img src="<%= bm.movie.poster_url %>" class="card-img-top" alt="<%= bm.movie.title %>">
+          <% else %>
+            <img src="https://via.placeholder.com/400x250?text=No+Poster" class="card-img-top">
+          <% end %>
+
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><%= bm.movie.title %></h5>
+            <p class="text-muted small mb-1">⭐ <%= bm.movie.rating %>/10</p>
+            <p class="text-muted small"><%= truncate(bm.movie.overview, length: 80) %></p>
+
+            <% if bm.comment.present? %>
+              <p class="fw-bold small mt-2">"<%= bm.comment %>"</p>
+            <% end %>
+
+        <%= link_to list_bookmark_path(@list, bm),
+            data: { turbo_method: :delete, turbo_confirm: "Remove this movie?" },
+            class: "btn btn rounded-btn" do %>
+  <i class="fa-solid fa-trash"></i>
+<% end %>
+
+
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

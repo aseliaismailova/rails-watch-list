@@ -1,18 +1,35 @@
-<div class="mb-4 d-flex justify-content-center align-items-center">
+<nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand d-flex align-items-center" href="/">
+    <img src="<%= asset_path('popcorn.png') %>" width="40" height="40" class="d-inline-block align-top me-2" alt="Logo">
+  </a>
+  <%= link_to "Create a movie list", new_list_path, class: "btn btn-primary rounded-btn" %>
+</nav>
 
 
-<h1>My watch list</h1>
+
+<div class="banner" style="
+  background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),
+  url('https://static.vecteezy.com/system/resources/thumbnails/070/637/784/small/vintage-cinema-interior-with-red-velvet-seating-and-illuminated-screen-ready-for-movie-presentation-photo.jpeg');
+">
+  <div class="container text-white py-5">
+    <h1>Your Watchlist</h1>
+    <p>All your favourite movies in one place.</p>
+  </div>
 </div>
 
-<div class="mb-4 d-flex justify-content-center align-items-center">
-<p>Your favourite movies in one place!</p>
+<div class="container py-5">
+  <h3 class="mb-4">Your Lists</h3>
+
+  <div class="row g-4">
+    <% @lists.each do |list| %>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><%= list.name %></h5>
+            <%= link_to "View List", list_path(list), class: "btn btn-primary rounded-btn w-100 mt-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
-
-<%= link_to "Create a new list", new_list_path %>
-
-<ul class="list-group">
-  <% @lists.each do |list| %>
-    <li class="list-group-item"><%= list.name %></li>
-  <% end %>
-</ul>
-<br>
